@@ -13,7 +13,7 @@ that after converting half a class, you will either give up, or start from scrat
 You try this little tool, taking 90% of the pain out of the process.
 #### By the way: 
 You are looking at the Ant/Java Edition of the converter.
-If you have the Dart SDK set up on your maching, consider the other editions:
+If you have the Dart SDK set up on your machine, consider the other editions:
 - Dart Project Edition: https://github.com/blockforest/actionscript-to-dart-project
 - Pub Edition: https://github.com/blockforest/actionscript-to-dart-pub
 
