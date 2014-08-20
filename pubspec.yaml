@@ -1,0 +1,5 @@
+name: actionscript2dart
+description: A pub package
+dependencies: 
+ stagexl: 
+  git : https://github.com/bp74/StageXL.git

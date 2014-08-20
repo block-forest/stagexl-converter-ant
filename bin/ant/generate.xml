@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Actionscript to Dart Library Generator" default="convert_to_dart" basedir="../">
+	
+	<!-- Make sure you have Ant Contrib installed:
+	 http://sourceforge.net/projects/ant-contrib/files/ -->
+	<taskdef resource="net/sf/antcontrib/antlib.xml" />
+	
+	<target name="convert" description="Converts your project to Dart libraries">
+		<!-- Comment this out when you've provided params 1 to 4 -->
+		<echo message="You clearly didn't look into generate.xml. Otherwise, this would work."/>
+		<fail/>
+		
+		<antcall target="convert_to_dart">
+			<!-- 1. Provide a name for your new Dart library  -->
+			<param name="library" value="mypackage_autogen"/>
+			<!-- 2. Optionally, limit the conversion to certain packages -->
+			<param name="package" value="com/my/package"/>
+			<!-- 3. Provide the full path to your AS3 project's 'src' dir. -->
+			<param name="source_basedir" value="/Volumes/..../src"/>
+			<!-- 4. Specify the target dir for your new Dart library  -->
+			<param name="target_basedir" value="${basedir}/../lib"/>
+		</antcall>
+	</target>
+	
+	<target name="convert_examples" description="Convert all three examples to Dart libraries">
+		<echo message="Converting Spring example..."/>
+		<antcall target="convert_to_dart">
+			<param name="library" value="spring_autogen"/>
+			<param name="package" value="org"/>
+			<param name="source_basedir" value="${basedir}/actionscript"/>
+			<param name="target_basedir" value="${basedir}/../lib"/>
+		</antcall>
+		
+		<echo message="Converting DotLight example to dotlight_autogen."/>
+		<antcall target="convert_to_dart">
+			<param name="library" value="dotlight_autogen"/>
+			<param name="package" value="example/wonderfl/dotlight"/>
+			<param name="source_basedir" value="${basedir}/actionscript"/>
+			<param name="target_basedir" value="${basedir}/../lib"/>
+		</antcall>
+		
+		<echo message="Converting xmas example to xmas_autogen."/>
+		<antcall target="convert_to_dart">
+			<param name="library" value="xmas_autogen"/>
+			<param name="package" value="example/wonderfl/xmas"/>
+			<param name="source_basedir" value="${basedir}/actionscript"/>
+			<param name="target_basedir" value="${basedir}/../lib"/>
+		</antcall>
+	</target>
+	
+	<target name="convert_to_dart" description="Convert AS3 to Dart">
+		
+		<!-- The dir where DartConverter.java sits  -->
+		<property name="source" value="${source_basedir}/${package}"/>
+		<property name="target" value="${target_basedir}/${library}"/>
+		
+		<!-- The dir where DartConverter.java sits  -->
+		<property name="javaclass" value="${basedir}/java"/>
+		<!-- The dir where pubspec and library templates are located  -->
+		<property name="template" value="${basedir}/template"/>
+
+		<!-- compile conversion java class -->
+		<javac srcdir="${javaclass}" destdir="${javaclass}" includeantruntime="true"/>
+
+		<!-- copy template files to target library -->
+		<copy todir="${target}" encoding="UTF-8" preservelastmodified="true">
+			<fileset dir="${template}" includes="**/*" excludes="**/*.java, **/*.class" />
+			<!--<filterset refid="copyfilterset" />-->
+			<filterset>
+				<filter token="library" value="${library}" />
+			</filterset>
+		</copy>
+		<move file="${target}/library.dart.tpl" tofile="${target}/${library}.dart"/>
+		<move file="${target}/pubspec.yaml.tpl" tofile="${target}/pubspec.yaml"/>
+
+		<!-- perform conversion for each as3-file in source directory -->
+		<for param="as3file">
+			<path>
+				<fileset dir="${source}" includes="**/*.as" />
+			</path>
+			<sequential>
+				<java classname="DartConverter">
+					<!-- Full path to the AS3 file you want to convert. -->
+					<arg value="@{as3file}" />
+					<!-- Basedir path. This will get 'substracted' from the Full path in order to preserve package dir structures -->
+					<arg value="${source_basedir}" />
+					<!-- Full path to Output dir. Normally, your Dart project's lib directory -->
+					<arg value="${target}" />
+					<!-- Name of the Dart library you want to create. -->
+					<arg value="${library}" />
+					<classpath>
+						<pathelement path="${javaclass}" />
+						<pathelement path="${java.class.path}" />
+					</classpath>
+				</java>
+
+			</sequential>
+		</for>
+
+	</target>
+</project>

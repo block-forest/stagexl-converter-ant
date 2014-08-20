@@ -1,0 +1,7 @@
+packages
+.DS_Store
+.settings
+.project
+lib/spring_autogen
+lib/dotlight_autogen
+lib/xmas_autogen
