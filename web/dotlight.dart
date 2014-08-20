@@ -1,4 +1,3 @@
-library actionscript2dart;
 import 'package:stagexl/stagexl.dart';
 import 'package:actionscript2dart/dotlight_working/dotlight.dart';
 import 'dart:html';

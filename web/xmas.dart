@@ -1,4 +1,3 @@
-library actionscript2dart;
 import 'package:stagexl/stagexl.dart';
 import 'package:actionscript2dart/xmas_working/xmas.dart';
 import 'dart:html';
